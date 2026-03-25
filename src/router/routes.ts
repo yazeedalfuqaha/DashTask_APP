@@ -3,17 +3,24 @@ import type { RouteRecordRaw } from 'vue-router'
 const routes: RouteRecordRaw[] = [
   {
     path: '/',
-    component: () => import('layouts/MainLayout.vue'), // 🌟 Layout رئيسي
+    component: () => import('layouts/MainLayout.vue'),
     children: [
-      { path: '', redirect: '/login' },
-      { path: 'login', component: () => import('pages/LoginPage.vue') },
-      { path: '/about-app', component: () => import('pages/AboutPage.vue') },
-      { path: 'signup', component: () => import('pages/SignupPage.vue') },
+      { path: '', component: () => import('pages/IndexPage.vue') },
       { path: 'dashboard', component: () => import('pages/DashboardPage.vue'), meta: { requiresAuth: true } },
-      { path: ':catchAll(.*)*', redirect: '/login' },
+      { path: 'tasks', component: () => import('pages/TasksPage.vue'), meta: { requiresAuth: true } },
 
-    ]
-  }
-]
+
+      { path: 'about-app', component: () => import('pages/AboutPage.vue') },
+
+      { path: 'login', component: () => import('pages/LoginPage.vue') },
+      { path: 'signup', component: () => import('pages/SignupPage.vue') },
+    ],
+  },
+  
+  {
+    path: '/:catchAll(.*)*',
+    component: () => import('pages/ErrorNotFound.vue'),
+  },
+];
 
 export default routes

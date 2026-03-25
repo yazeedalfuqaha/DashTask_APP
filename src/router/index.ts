@@ -8,7 +8,7 @@ import {
 import routes from './routes'
 import { useAuthStore } from 'src/stores/auth'
 
-export default defineRouter(function ({ store }) { 
+export default defineRouter(function ({ store }) {
 
   const createHistory = process.env.SERVER
     ? createMemoryHistory
