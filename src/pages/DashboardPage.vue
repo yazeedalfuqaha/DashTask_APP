@@ -69,7 +69,7 @@
         </q-card-section>
 
         <q-card-actions align="center" class="q-pb-md">
-          <q-btn flat label="Logout" color="negative" icon="logout" @click="auth.logout()" v-close-popup />
+          <q-btn flat label="Close Tab" color="negative" icon="logout" @click="auth.logout()" v-close-popup />
         </q-card-actions>
       </q-card>
     </q-dialog>
