@@ -5,8 +5,6 @@ import { defineConfig } from '#q-app/wrappers';
 
 export default defineConfig((/* ctx */) => {
   return {
-
-
     // https://v2.quasar.dev/quasar-cli-vite/prefetch-feature
     // preFetch: true,
 
@@ -39,8 +37,14 @@ export default defineConfig((/* ctx */) => {
         node: 'node20',
       },
 
-       htmlVariables: {
-    title: 'DashTask APP'
+      htmlVariables: {
+        title: 'DashTask APP',
+      },
+
+      manifest: {
+    name: 'My Awesome Task App', // الاسم الكامل عند التثبيت
+    short_name: 'TaskApp',
+    // ...
   },
 
       typescript: {
