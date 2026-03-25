@@ -1,14 +1,13 @@
 <template>
   <q-page class="q-pa-md flex flex-center bg-grey-1">
     <div class="about-card shadow-5 q-pa-xl bg-white text-center">
-
       <q-icon name="rocket_launch" size="100px" color="primary" class="q-mb-md" />
 
       <h1 class="text-h3 text-weight-bolder text-primary q-mt-none">DashTask App</h1>
 
       <p class="text-subtitle1 text-grey-8 q-mb-xl">
-        The ultimate solution to organize your daily tasks and boost your productivity.
-        Designed for professionals who value their time.
+        The ultimate solution to organize your daily tasks and boost your productivity. Designed for
+        professionals who value their time.
       </p>
 
       <div class="row q-col-gutter-md justify-center q-mb-xl">
@@ -66,8 +65,8 @@
 </template>
 
 <script setup lang="ts">
-import { useAuthStore } from 'src/stores/auth'
-const auth = useAuthStore()
+import { useAuthStore } from 'src/stores/auth';
+const auth = useAuthStore();
 </script>
 
 <style scoped>
@@ -76,10 +75,12 @@ const auth = useAuthStore()
   max-width: 900px;
   border-radius: 24px;
 }
+
 .feature-card {
   transition: transform 0.3s ease;
   border-radius: 15px;
 }
+
 .feature-card:hover {
   transform: translateY(-10px);
   border-color: var(--q-primary);

@@ -13,6 +13,14 @@
         <q-list padding>
           <q-item-label header class="text-overline">Navigation</q-item-label>
 
+
+           <q-item clickable v-ripple to="/" active-class="text-primary bg-blue-1" exact>
+            <q-item-section avatar>
+              <q-icon name="home" /> </q-item-section>
+            <q-item-section class="text-weight-medium">Home</q-item-section>
+          </q-item>
+
+
           <q-item clickable v-ripple to="/about-app" active-class="text-primary bg-blue-1" exact>
             <q-item-section avatar>
               <q-icon name="info" /> </q-item-section>
@@ -45,7 +53,7 @@
       </q-scroll-area>
     </q-drawer>
 
-    <q-page-container>
+    <q-page-container class="custom-container">
       <router-view />
     </q-page-container>
   </q-layout>
@@ -71,4 +79,8 @@ const handleLogout = () => {
   border-radius: 0 24px 24px 0;
   margin-right: 12px;
 }
+.custom-container {
+  padding-top: 28px !important;
+}
+
 </style>
