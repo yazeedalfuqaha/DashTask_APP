@@ -1,21 +1,48 @@
 <template>
-  <q-layout view="lHh Lpr lFf">
-    <q-header elevated>
-      <q-toolbar>
-        <q-btn flat dense round icon="menu" aria-label="Menu" @click="toggleLeftDrawer" />
+  <q-layout view="lHh Lpr lFf" class="bg-grey-1">
 
-        <q-toolbar-title> Quasar App </q-toolbar-title>
-
-        <div>Quasar v{{ $q.version }}</div>
+    <q-header elevated class="bg-primary text-white">
+      <q-toolbar class="q-py-sm">
+        <q-btn flat dense round icon="menu" @click="drawer = !drawer" />
+        <q-toolbar-title class="text-weight-bold">DashTask App</q-toolbar-title>
       </q-toolbar>
     </q-header>
 
-    <q-drawer v-model="leftDrawerOpen" show-if-above bordered>
-      <q-list>
-        <q-item-label header> Essential Links </q-item-label>
+    <q-drawer v-model="drawer" show-if-above bordered :width="240" class="bg-white">
+      <q-scroll-area class="fit">
+        <q-list padding>
+          <q-item-label header class="text-overline">Navigation</q-item-label>
 
-        <EssentialLink v-for="link in linksList" :key="link.title" v-bind="link" />
-      </q-list>
+          <q-item clickable v-ripple to="/about-app" active-class="text-primary bg-blue-1" exact>
+            <q-item-section avatar>
+              <q-icon name="info" /> </q-item-section>
+            <q-item-section class="text-weight-medium">About DashTask</q-item-section>
+          </q-item>
+
+          <q-item v-if="!auth.user" clickable v-ripple to="/login" active-class="text-primary bg-blue-1">
+            <q-item-section avatar>
+              <q-icon name="login" />
+            </q-item-section>
+            <q-item-section class="text-weight-medium">Login</q-item-section>
+          </q-item>
+
+          <q-item v-if="!auth.user" clickable v-ripple to="/signup" active-class="text-primary bg-blue-1">
+            <q-item-section avatar>
+              <q-icon name="person_add" />
+            </q-item-section>
+            <q-item-section class="text-weight-medium">Sign Up</q-item-section>
+          </q-item>
+
+          <q-separator v-if="auth.user" class="q-my-md" />
+
+          <q-item v-if="auth.user" clickable v-ripple class="text-negative" @click="handleLogout">
+            <q-item-section avatar>
+              <q-icon name="logout" />
+            </q-item-section>
+            <q-item-section class="text-weight-medium">Logout</q-item-section>
+          </q-item>
+        </q-list>
+      </q-scroll-area>
     </q-drawer>
 
     <q-page-container>
@@ -25,57 +52,23 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
-import EssentialLink, { type EssentialLinkProps } from 'components/EssentialLink.vue';
+import { ref } from 'vue'
+import { useAuthStore } from 'src/stores/auth'
+import { useRouter } from 'vue-router'
 
-const linksList: EssentialLinkProps[] = [
-  {
-    title: 'Docs',
-    caption: 'quasar.dev',
-    icon: 'school',
-    link: 'https://quasar.dev',
-  },
-  {
-    title: 'Github',
-    caption: 'github.com/quasarframework',
-    icon: 'code',
-    link: 'https://github.com/quasarframework',
-  },
-  {
-    title: 'Discord Chat Channel',
-    caption: 'chat.quasar.dev',
-    icon: 'chat',
-    link: 'https://chat.quasar.dev',
-  },
-  {
-    title: 'Forum',
-    caption: 'forum.quasar.dev',
-    icon: 'record_voice_over',
-    link: 'https://forum.quasar.dev',
-  },
-  {
-    title: 'Twitter',
-    caption: '@quasarframework',
-    icon: 'rss_feed',
-    link: 'https://twitter.quasar.dev',
-  },
-  {
-    title: 'Facebook',
-    caption: '@QuasarFramework',
-    icon: 'public',
-    link: 'https://facebook.quasar.dev',
-  },
-  {
-    title: 'Quasar Awesome',
-    caption: 'Community Quasar projects',
-    icon: 'favorite',
-    link: 'https://awesome.quasar.dev',
-  },
-];
+const drawer = ref(false)
+const auth = useAuthStore()
+const router = useRouter()
 
-const leftDrawerOpen = ref(false);
-
-function toggleLeftDrawer() {
-  leftDrawerOpen.value = !leftDrawerOpen.value;
+const handleLogout = () => {
+  auth.user = null
+  void router.push('/login')
 }
 </script>
+
+<style scoped>
+.q-item {
+  border-radius: 0 24px 24px 0;
+  margin-right: 12px;
+}
+</style>
