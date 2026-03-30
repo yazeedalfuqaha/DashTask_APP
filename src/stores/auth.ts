@@ -4,7 +4,8 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   signOut,
-  updateProfile
+  updateProfile,
+  onAuthStateChanged
 } from 'firebase/auth'
 
 export type User = {
@@ -16,7 +17,8 @@ export type User = {
 export const useAuthStore = defineStore('auth', {
   state: () => ({
     user: null as User,
-    error: null as string | null
+    error: null as string | null,
+    initialized: false // ✅ علامة أن Firebase جاهز
   }),
   actions: {
 
@@ -24,7 +26,6 @@ export const useAuthStore = defineStore('auth', {
       this.error = null
       try {
         const res = await createUserWithEmailAndPassword(auth, email, password)
-
 
         await updateProfile(res.user, {
           displayName: name
@@ -47,7 +48,7 @@ export const useAuthStore = defineStore('auth', {
         this.user = {
           uid: res.user.uid,
           email: res.user.email,
-          displayName: res.user.displayName 
+          displayName: res.user.displayName
         }
       } catch (err: unknown) {
         this.error = (err as { message: string })?.message ?? String(err)
@@ -71,6 +72,15 @@ export const useAuthStore = defineStore('auth', {
             displayName: firebaseUser.displayName ?? null
           }
         : null
+    },
+
+  
+    init() {
+      onAuthStateChanged(auth, (firebaseUser) => {
+        this.setUserFromFirebase(firebaseUser)
+        this.initialized = true
+      })
     }
+
   }
 })

@@ -8,9 +8,7 @@ import { createPinia } from 'pinia';
  */
 declare module 'pinia' {
   // eslint-disable-next-line @typescript-eslint/no-empty-object-type
-  export interface PiniaCustomProperties {
-
-  }
+  export interface PiniaCustomProperties {}
 }
 
 /*
@@ -24,8 +22,6 @@ declare module 'pinia' {
 
 export default defineStore((/* { ssrContext } */) => {
   const pinia = createPinia();
-
-
 
   return pinia;
 });

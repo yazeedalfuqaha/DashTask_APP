@@ -52,7 +52,7 @@
 import { ref } from 'vue'
 import { useAuthStore } from 'src/stores/auth'
 import { useRouter } from 'vue-router'
-import { useQuasar } from 'quasar' 
+import { useQuasar } from 'quasar'
 
 const name = ref('')
 const email = ref('')
@@ -66,7 +66,7 @@ const $q = useQuasar()
 const handleSignup = async () => {
   loading.value = true
   try {
-    // تمرير القيم الثلاث للـ Store
+
     await auth.signup(email.value, password.value, name.value)
 
     if (!auth.error && auth.user) {
