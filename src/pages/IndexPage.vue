@@ -109,28 +109,28 @@ const userName = computed(() => {
 </script>
 
 <style scoped>
-/* 1. منع السكرول وإخفاء أي محتوى زائد نهائياً */
+
 .bg-gradient {
   background: linear-gradient(135deg, #1976d2 0%, #673ab7 100%);
   height: 100vh;
   width: 100vw;
-  overflow: hidden !important; /* هذا السطر يمنع السكرول في الصفحة */
+  overflow: hidden !important;
   position: fixed;
   top: 0;
   left: 0;
 }
 
-/* 2. حاوية مرنة تضمن بقاء كل شيء في المنتصف */
+
 .welcome-container {
   max-width: 450px;
   width: 90%;
-  max-height: 95vh; /* تضمن أن المحتوى لا يلمس حواف الشاشة */
+  max-height: 95vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
 }
 
-/* 3. تنسيق الكرت (قمت بتغييره ليناسب التصميم العصري) */
+
 .my-card {
   border-radius: 24px;
   background: rgba(255, 255, 255, 0.95);
@@ -138,7 +138,7 @@ const userName = computed(() => {
   box-shadow: 0 20px 40px rgba(0,0,0,0.2);
 }
 
-/* 4. جعل النصوص والأيقونات متجاوبة لتصغر في الشاشات الصغيرة */
+
 .hero-section q-icon {
   font-size: clamp(60px, 10vh, 100px) !important;
 }
@@ -148,19 +148,19 @@ const userName = computed(() => {
   line-height: 1.1;
 }
 
-/* 5. إخفاء السكرول من المتصفح نفسه (إجباري) */
+
 :deep(html), :deep(body) {
   overflow: hidden !important;
   height: 100% !important;
   margin: 0 !important;
 }
 
-/* إخفاء شريط التمرير في المتصفحات */
+
 :deep(::-webkit-scrollbar) {
   display: none;
 }
 
-/* الأنميشن */
+
 .float-animation {
   animation: floating 3s ease-in-out infinite;
 }

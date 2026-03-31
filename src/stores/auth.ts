@@ -18,7 +18,7 @@ export const useAuthStore = defineStore('auth', {
   state: () => ({
     user: null as User,
     error: null as string | null,
-    initialized: false // ✅ علامة أن Firebase جاهز
+    initialized: false 
   }),
   actions: {
 
@@ -74,7 +74,7 @@ export const useAuthStore = defineStore('auth', {
         : null
     },
 
-  
+
     init() {
       onAuthStateChanged(auth, (firebaseUser) => {
         this.setUserFromFirebase(firebaseUser)

@@ -45,30 +45,32 @@
 
         <q-card-section class="q-pa-md">
           <div class="text-subtitle2 q-mb-sm">Task Statistics</div>
-          <q-list bordered separator class="rounded-borders">
-            <q-item>
-              <q-item-section avatar>
-                <q-icon name="pending" color="orange" />
-              </q-item-section>
-              <q-item-section>Pending Tasks</q-item-section>
-              <q-item-section side>
-                <q-badge color="orange" :label="pendingCount.toString()" />
-              </q-item-section>
-            </q-item>
+        <q-list bordered separator class="rounded-borders">
+  <!-- Completed Tasks first -->
+  <q-item>
+    <q-item-section avatar>
+      <q-icon name="check_circle" color="positive" />
+    </q-item-section>
+    <q-item-section>Completed Tasks</q-item-section>
+    <q-item-section side>
+      <q-badge color="positive" :label="completedCount.toString()" />
+    </q-item-section>
+  </q-item>
 
-            <q-item>
-              <q-item-section avatar>
-                <q-icon name="check_circle" color="positive" />
-              </q-item-section>
-              <q-item-section>Completed Tasks</q-item-section>
-              <q-item-section side>
-                <q-badge color="positive" :label="completedCount.toString()" />
-              </q-item-section>
-            </q-item>
-          </q-list>
+  <!-- Pending Tasks second -->
+  <q-item>
+    <q-item-section avatar>
+      <q-icon name="pending" color="orange" />
+    </q-item-section>
+    <q-item-section>Pending Tasks</q-item-section>
+    <q-item-section side>
+      <q-badge color="orange" :label="pendingCount.toString()" />
+    </q-item-section>
+  </q-item>
+</q-list>
         </q-card-section>
 
-      
+
       </q-card>
     </q-dialog>
   </q-page>
@@ -90,6 +92,7 @@ const auth = useAuthStore();
 const showProfile = ref(false);
 const userTasks = ref<Task[]>([]);
 
+
 const userName = computed((): string => {
   const name = auth.user?.displayName || auth.user?.email?.split('@')[0];
   return name || 'Guest';
@@ -110,6 +113,7 @@ onMounted(() => {
 
 const pendingCount = computed(() => userTasks.value.filter(t => !t.completed).length);
 const completedCount = computed(() => userTasks.value.filter(t => t.completed).length);
+
 </script>
 
 <style scoped>

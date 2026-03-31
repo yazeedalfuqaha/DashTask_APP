@@ -1,6 +1,6 @@
 <template>
   <div>
-    <!-- Spinner يظهر أثناء انتظار Firebase -->
+    
     <div v-if="loading" class="spinner-container">
       <div class="spinner"></div>
     </div>
@@ -41,7 +41,7 @@ const stopWatch = watch(
 }
 
 .spinner {
-  border: 6px solid #f3f3f3; 
+  border: 6px solid #f3f3f3;
   border-top: 6px solid #1976d2;
   border-radius: 50%;
   width: 50px;
