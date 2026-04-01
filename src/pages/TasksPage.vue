@@ -1,8 +1,7 @@
 <template>
   <q-page class="q-pa-md bg-grey-2">
     <div class="max-container q-mx-auto" style="max-width: 800px;">
-
-
+      <!-- Header -->
       <div class="row items-center q-mb-lg">
         <div class="col">
           <h4 class="text-h4 text-weight-bold q-my-none text-primary">My Tasks</h4>
@@ -11,7 +10,7 @@
         <q-btn round color="primary" icon="add" size="lg" @click="showAddDialog = true" />
       </div>
 
-
+      <!-- Stats -->
       <div class="row q-col-gutter-md q-mb-lg">
         <div class="col-12 col-sm-6">
           <q-card class="bg-primary text-white text-center q-pa-md">
@@ -27,57 +26,13 @@
           </q-card>
         </div>
       </div>
+    <TaskList
+        :tasks="paginatedTasks"
+        @toggle="toggleComplete"
+        @delete="deleteTask"
+      />
 
-
-      <q-list bordered separator class="bg-white rounded-borders shadow-1">
-        <q-item
-          v-for="task in paginatedTasks"
-          :key="task.id"
-          clickable
-          v-ripple
-          :class="{ 'task-done bg-grey-1': task.completed }"
-        >
-
-          <q-item-section side>
-            <q-checkbox
-              v-model="task.completed"
-              color="primary"
-              @update:model-value="toggleComplete(task)"
-            />
-          </q-item-section>
-
-         
-          <q-item-section>
-            <q-item-label :class="{ 'text-strike text-grey-6': task.completed }" class="text-weight-bold text-subtitle1">
-              {{ task.title }}
-            </q-item-label>
-            <q-item-label caption v-if="task.description">
-              {{ task.description }}
-            </q-item-label>
-          </q-item-section>
-
-
-          <q-item-section side>
-            <q-btn
-              flat
-              round
-              color="negative"
-              icon="delete"
-              size="sm"
-              @click.stop="deleteTask(task.id)"
-            />
-          </q-item-section>
-        </q-item>
-
-        <q-item v-if="tasks.length === 0" class="text-center q-pa-xl text-grey-5">
-          <q-item-section>
-            <q-icon name="assignment" size="100px" class="q-mx-auto" />
-            <div class="text-h6">No tasks yet! Add one to start.</div>
-          </q-item-section>
-        </q-item>
-      </q-list>
-
-
+    
       <div v-if="totalPages > 1" class="row justify-center q-mt-md">
         <q-pagination
           v-model="currentPage"
@@ -105,7 +60,6 @@
           </q-card-actions>
         </q-card>
       </q-dialog>
-
     </div>
   </q-page>
 </template>
@@ -114,8 +68,18 @@
 import { ref, computed, onMounted } from 'vue'
 import { useQuasar } from 'quasar'
 import { db, auth } from 'src/boot/firebase'
-import { collection, addDoc, query, where, onSnapshot, deleteDoc, doc, updateDoc } from 'firebase/firestore'
 import type { Task } from 'src/types/task'
+import TaskList from 'src/components/TaskList.vue'
+import {
+  collection,
+  addDoc,
+  query,
+  where,
+  onSnapshot,
+  deleteDoc,
+  doc,
+  updateDoc
+} from 'firebase/firestore'
 
 const $q = useQuasar()
 const showAddDialog = ref(false)
@@ -124,14 +88,12 @@ const newTask = ref({ title: '', description: '' })
 const currentPage = ref(1)
 const tasksPerPage = 5
 
-// Load tasks for the current user
 onMounted(() => {
   if (auth.currentUser) {
     const q = query(
       collection(db, 'tasks'),
       where('userId', '==', auth.currentUser.uid)
     )
-
     onSnapshot(q, (snapshot) => {
       tasks.value = snapshot.docs.map(doc => ({
         id: doc.id,
@@ -140,7 +102,6 @@ onMounted(() => {
     })
   }
 })
-
 
 const addTask = async () => {
   if (newTask.value.title.trim() && auth.currentUser) {
@@ -154,25 +115,22 @@ const addTask = async () => {
       })
       newTask.value = { title: '', description: '' }
       showAddDialog.value = false
-      $q.notify({ type: 'positive', message: 'Task saved!' })
+      $q.notify({ type: 'positive', message: 'Task saved to cloud!' })
     } catch {
       $q.notify({ type: 'negative', message: 'Error saving task' })
     }
   }
 }
 
-
 const toggleComplete = async (task: Task) => {
   const taskRef = doc(db, 'tasks', task.id)
   await updateDoc(taskRef, { completed: task.completed })
 }
 
-
 const deleteTask = async (id: string) => {
   await deleteDoc(doc(db, 'tasks', id))
   $q.notify({ type: 'negative', message: 'Task deleted' })
 }
-
 
 const pendingTasks = computed(() => tasks.value.filter(t => !t.completed))
 const completedTasks = computed(() => tasks.value.filter(t => t.completed))

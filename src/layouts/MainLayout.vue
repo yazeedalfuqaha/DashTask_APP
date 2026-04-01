@@ -62,7 +62,7 @@ const handleLogout = () => {
   padding-top: 28px !important;
 }
 
-/* Style for completed items to show they are finished */
+
 .text-grey-7 {
   text-decoration: line-through;
   opacity: 0.7;
