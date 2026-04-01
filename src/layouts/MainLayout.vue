@@ -40,7 +40,7 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from 'src/stores/auth'
-import TasksDropdown from 'src/components/TasksDropdown.vue' 
+import TasksDropdown from 'src/components/TasksDropdown.vue'
 
 const drawer = ref(false)
 const auth = useAuthStore()

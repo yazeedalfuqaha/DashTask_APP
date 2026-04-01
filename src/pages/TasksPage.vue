@@ -1,31 +1,43 @@
 <template>
   <q-page class="q-pa-md bg-grey-2">
-    <div class="max-container q-mx-auto">
+    <div class="max-container q-mx-auto" style="max-width: 800px;">
+
+
       <div class="row items-center q-mb-lg">
         <div class="col">
           <h4 class="text-h4 text-weight-bold q-my-none text-primary">My Tasks</h4>
           <div class="text-grey-7">Manage your daily goals and stay productive.</div>
         </div>
-        <q-btn round color="primary" icon="add" size="lg" @click="showAddDialog = true" class="shadow-5" />
+        <q-btn round color="primary" icon="add" size="lg" @click="showAddDialog = true" />
       </div>
+
 
       <div class="row q-col-gutter-md q-mb-lg">
         <div class="col-12 col-sm-6">
-          <q-card flat bordered class="bg-primary text-white text-center q-pa-md">
-            <div class="text-subtitle2 opacity-80">Pending Tasks</div>
-            <div class="text-h4 text-weight-bolder">{{ pendingTasks.length }}</div>
+          <q-card class="bg-primary text-white text-center q-pa-md">
+            <div>Pending Tasks</div>
+            <div class="text-h4">{{ pendingTasks.length }}</div>
           </q-card>
         </div>
+
         <div class="col-12 col-sm-6">
-          <q-card flat bordered class="bg-positive text-white text-center q-pa-md">
-            <div class="text-subtitle2 opacity-80">Completed</div>
-            <div class="text-h4 text-weight-bolder">{{ completedTasks.length }}</div>
+          <q-card class="bg-positive text-white text-center q-pa-md">
+            <div>Completed</div>
+            <div class="text-h4">{{ completedTasks.length }}</div>
           </q-card>
         </div>
       </div>
 
+
       <q-list bordered separator class="bg-white rounded-borders shadow-1">
-        <q-item v-for="task in paginatedTasks" :key="task.id" clickable v-ripple :class="{ 'task-done bg-grey-1': task.completed }">
+        <q-item
+          v-for="task in paginatedTasks"
+          :key="task.id"
+          clickable
+          v-ripple
+          :class="{ 'task-done bg-grey-1': task.completed }"
+        >
+
           <q-item-section side>
             <q-checkbox
               v-model="task.completed"
@@ -34,15 +46,26 @@
             />
           </q-item-section>
 
+         
           <q-item-section>
             <q-item-label :class="{ 'text-strike text-grey-6': task.completed }" class="text-weight-bold text-subtitle1">
               {{ task.title }}
             </q-item-label>
-            <q-item-label caption v-if="task.description">{{ task.description }}</q-item-label>
+            <q-item-label caption v-if="task.description">
+              {{ task.description }}
+            </q-item-label>
           </q-item-section>
 
+
           <q-item-section side>
-            <q-btn flat round color="negative" icon="delete" size="sm" @click="deleteTask(task.id)" />
+            <q-btn
+              flat
+              round
+              color="negative"
+              icon="delete"
+              size="sm"
+              @click.stop="deleteTask(task.id)"
+            />
           </q-item-section>
         </q-item>
 
@@ -54,60 +77,45 @@
         </q-item>
       </q-list>
 
+
       <div v-if="totalPages > 1" class="row justify-center q-mt-md">
         <q-pagination
           v-model="currentPage"
           :max="totalPages"
-          direction-links
-          boundary-links
           color="primary"
-          icon-first="skip_previous"
-          icon-last="skip_next"
-          icon-prev="fast_rewind"
-          icon-next="fast_forward"
+          direction-links
         />
       </div>
 
-      <q-dialog v-model="showAddDialog" persistent>
-        <q-card style="min-width: 350px" class="q-pa-md">
-          <q-card-section><div class="text-h6">Add New Task</div></q-card-section>
-          <q-card-section class="q-pt-none">
-            <q-input dense v-model="newTask.title" label="Task Title" outlined class="q-mb-md" autofocus />
-            <q-input dense v-model="newTask.description" label="Description (Optional)" outlined type="textarea" />
+      <!-- Add Dialog -->
+      <q-dialog v-model="showAddDialog">
+        <q-card style="min-width: 350px">
+          <q-card-section>
+            <div class="text-h6">Add Task</div>
           </q-card-section>
-          <q-card-actions align="right" class="text-primary">
+
+          <q-card-section>
+            <q-input v-model="newTask.title" label="Title" outlined />
+            <q-input v-model="newTask.description" label="Description" outlined type="textarea" class="q-mt-sm" />
+          </q-card-section>
+
+          <q-card-actions align="right">
             <q-btn flat label="Cancel" v-close-popup />
-            <q-btn unelevated label="Add Task" color="primary" @click="addTask" v-close-popup />
+            <q-btn color="primary" label="Add" @click="addTask" v-close-popup />
           </q-card-actions>
         </q-card>
       </q-dialog>
+
     </div>
   </q-page>
 </template>
 
 <script setup lang="ts">
-
 import { ref, computed, onMounted } from 'vue'
 import { useQuasar } from 'quasar'
 import { db, auth } from 'src/boot/firebase'
-import {
-  collection,
-  addDoc,
-  query,
-  where,
-  onSnapshot,
-  deleteDoc,
-  doc,
-  updateDoc
-} from 'firebase/firestore'
-
-interface Task {
-  id: string
-  title: string
-  description: string
-  completed: boolean
-  userId: string
-}
+import { collection, addDoc, query, where, onSnapshot, deleteDoc, doc, updateDoc } from 'firebase/firestore'
+import type { Task } from 'src/types/task'
 
 const $q = useQuasar()
 const showAddDialog = ref(false)
@@ -116,6 +124,7 @@ const newTask = ref({ title: '', description: '' })
 const currentPage = ref(1)
 const tasksPerPage = 5
 
+// Load tasks for the current user
 onMounted(() => {
   if (auth.currentUser) {
     const q = query(
@@ -132,6 +141,7 @@ onMounted(() => {
   }
 })
 
+
 const addTask = async () => {
   if (newTask.value.title.trim() && auth.currentUser) {
     try {
@@ -142,28 +152,27 @@ const addTask = async () => {
         userId: auth.currentUser.uid,
         createdAt: Date.now()
       })
-
       newTask.value = { title: '', description: '' }
       showAddDialog.value = false
-      $q.notify({ type: 'positive', message: 'Task saved to cloud!' })
+      $q.notify({ type: 'positive', message: 'Task saved!' })
     } catch {
-
       $q.notify({ type: 'negative', message: 'Error saving task' })
     }
   }
 }
 
+
 const toggleComplete = async (task: Task) => {
   const taskRef = doc(db, 'tasks', task.id)
-  await updateDoc(taskRef, {
-    completed: task.completed
-  })
+  await updateDoc(taskRef, { completed: task.completed })
 }
+
 
 const deleteTask = async (id: string) => {
   await deleteDoc(doc(db, 'tasks', id))
-  $q.notify({ type: 'danger', message: 'Task deleted' })
+  $q.notify({ type: 'negative', message: 'Task deleted' })
 }
+
 
 const pendingTasks = computed(() => tasks.value.filter(t => !t.completed))
 const completedTasks = computed(() => tasks.value.filter(t => t.completed))
